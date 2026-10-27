@@ -1,0 +1,16 @@
+      DOUBLE PRECISION FUNCTION DDOTP(N,DX,DY)
+      DOUBLE PRECISION DX(*),DY(*)
+      DDOTP = 0.0D0
+      DO 10 I=1,N
+      DDOTP = DDOTP + DX(I)*DY(I)
+   10 CONTINUE
+      RETURN
+      END
+      SUBROUTINE DAXPYP(N,DA,DX,DY)
+      DOUBLE PRECISION DA,DX(*),DY(*)
+      IF (DA.EQ.0.0D0) RETURN
+      DO 10 I=1,N
+      DY(I) = DY(I) + DA*DX(I)
+   10 CONTINUE
+      RETURN
+      END

@@ -1,0 +1,3062 @@
+{
+ "src": "/home/claude/liftproto/fortran/pcg.f",
+ "main": "/home/claude/liftproto/fortran/pcgmain.f",
+ "lib": "/home/claude/liftproto/ws_demo/build/lib.so",
+ "build": {
+  "cmd": "gfortran -std=legacy -fPIC -shared -ffp-contract=off -fno-fast-math -O2 pcg.f",
+  "src_sha256": "903b2a6d22356fa1"
+ },
+ "secret_seed": 4259912968,
+ "units": {
+  "AMUL": {
+   "kind": "kernel",
+   "static": {
+    "kind": "kernel",
+    "term": "AMUL = \u03bb(X).\n    let t1 = DG * X\n    let t2 = (i == 1 ? t1 : t1 - HX2I * 0.5 * (CK + CK[i-1,j]) * X[i-1,j])\n    let t3 = (i == NX ? t2 : t2 - HX2I * 0.5 * (CK + CK[i+1,j]) * X[i+1,j])\n    let t4 = (j == 1 ? t3 : t3 - HY2I * 0.5 * (CK + CK[i,j-1]) * X[i,j-1])\n    in  {Y = (j == NY ? t4 : t4 - HY2I * 0.5 * (CK + CK[i,j+1]) * X[i,j+1])}",
+    "reason": null,
+    "reason_specialized": null,
+    "specialized": null,
+    "footprint": {
+     "Y": "NX*NY",
+     "DG": "NX*NY",
+     "X": "NX*NY",
+     "CK": "NX*NY"
+    },
+    "reads_common": [
+     "CK",
+     "DG",
+     "HX2I",
+     "HY2I",
+     "NX",
+     "NY"
+    ],
+    "writes_common": []
+   },
+   "spec": {
+    "arg_len": {
+     "X": "NX*NY",
+     "Y": "NX*NY"
+    },
+    "int_args": {
+     "N": "N"
+    },
+    "common_int": {
+     "GRID.NX": "NX",
+     "GRID.NY": "NY"
+    },
+    "common_len": {
+     "GEOM.CK": "NX*NY",
+     "GEOM.DG": "NX*NY"
+    },
+    "source": {
+     "N": "size (appears in footprints / passed the caller size)",
+     "X": "static footprint",
+     "Y": "static footprint"
+    }
+   },
+   "spec_source": "static",
+   "term": "AMUL = \u03bb(X).\n    let t1 = DG * X\n    let t2 = (i == 1 ? t1 : t1 - HX2I * 0.5 * (CK + CK[i-1,j]) * X[i-1,j])\n    let t3 = (i == NX ? t2 : t2 - HX2I * 0.5 * (CK + CK[i+1,j]) * X[i+1,j])\n    let t4 = (j == 1 ? t3 : t3 - HY2I * 0.5 * (CK + CK[i,j-1]) * X[i,j-1])\n    in  {Y = (j == NY ? t4 : t4 - HY2I * 0.5 * (CK + CK[i,j+1]) * X[i,j+1])}",
+   "term_source": "static",
+   "primitive": null,
+   "lines": [
+    46,
+    68
+   ]
+  },
+  "DAXPY": {
+   "kind": "kernel",
+   "static": {
+    "kind": "kernel",
+    "term": "DAXPY = \u03bb(DA, DX, DY).\n    in  {DY = (DA == 0 ? DY : DY + DA * DX)}",
+    "reason": null,
+    "reason_specialized": null,
+    "specialized": null,
+    "footprint": {
+     "DY": "N",
+     "DX": "N"
+    },
+    "reads_common": [],
+    "writes_common": []
+   },
+   "spec": {
+    "arg_len": {
+     "DX": "N",
+     "DY": "N"
+    },
+    "int_args": {
+     "N": "N"
+    },
+    "common_int": {},
+    "common_len": {},
+    "source": {
+     "N": "size (appears in footprints / passed the caller size)",
+     "DX": "static footprint",
+     "DY": "static footprint"
+    }
+   },
+   "spec_source": "static",
+   "term": "DAXPY = \u03bb(DA, DX, DY).\n    in  {DY = (DA == 0 ? DY : DY + DA * DX)}",
+   "term_source": "static",
+   "primitive": null,
+   "lines": [
+    108,
+    127
+   ]
+  },
+  "DCOPY": {
+   "kind": "kernel",
+   "static": {
+    "kind": "kernel",
+    "term": "DCOPY = \u03bb(DX).\n    in  {DY = DX}",
+    "reason": null,
+    "reason_specialized": null,
+    "specialized": null,
+    "footprint": {
+     "DY": "N",
+     "DX": "N"
+    },
+    "reads_common": [],
+    "writes_common": []
+   },
+   "spec": {
+    "arg_len": {
+     "DX": "N",
+     "DY": "N"
+    },
+    "int_args": {
+     "N": "N"
+    },
+    "common_int": {},
+    "common_len": {},
+    "source": {
+     "N": "size (appears in footprints / passed the caller size)",
+     "DX": "static footprint",
+     "DY": "static footprint"
+    }
+   },
+   "spec_source": "static",
+   "term": "DCOPY = \u03bb(DX).\n    in  {DY = DX}",
+   "term_source": "static",
+   "primitive": null,
+   "lines": [
+    129,
+    135
+   ]
+  },
+  "DDOT": {
+   "kind": "kernel",
+   "static": {
+    "kind": "kernel",
+    "term": "DDOT = \u03bb(DX, DY).\n    in  {__result__ = foldl(+, 0, DX * DY)}",
+    "reason": null,
+    "reason_specialized": null,
+    "specialized": null,
+    "footprint": {
+     "DX": "N",
+     "DY": "N"
+    },
+    "reads_common": [],
+    "writes_common": []
+   },
+   "spec": {
+    "arg_len": {
+     "DX": "N",
+     "DY": "N"
+    },
+    "int_args": {
+     "N": "N"
+    },
+    "common_int": {},
+    "common_len": {},
+    "source": {
+     "N": "size (appears in footprints / passed the caller size)",
+     "DX": "static footprint",
+     "DY": "static footprint"
+    }
+   },
+   "spec_source": "static",
+   "term": "DDOT = \u03bb(DX, DY).\n    in  {__result__ = foldl(+, 0, DX * DY)}",
+   "term_source": "static",
+   "primitive": null,
+   "lines": [
+    85,
+    104
+   ]
+  },
+  "DNRM2": {
+   "kind": "primitive",
+   "static": {
+    "kind": "opaque",
+    "term": null,
+    "reason": "line 202: non-constant loop step or non-integer bounds",
+    "reason_specialized": "line 202: loop-carried state (SCALE, SSQ) with an update that is not a sequential sum -> not a recognised reduction",
+    "specialized": {
+     "INCX": 1
+    },
+    "footprint": {},
+    "reads_common": [],
+    "writes_common": []
+   },
+   "spec": {
+    "arg_len": {
+     "X": "N"
+    },
+    "int_args": {
+     "N": "N",
+     "INCX": "1"
+    },
+    "common_int": {},
+    "common_len": {},
+    "source": {
+     "N": "size (appears in footprints / passed the caller size)",
+     "X": "UNKNOWN (opaque) -- agent must propose",
+     "INCX": "constant at every call site"
+    }
+   },
+   "spec_source": "agent",
+   "term": null,
+   "term_source": null,
+   "primitive": {
+    "relation": "DNRM2 = \u03bb(X).\n    in  {__result__ = sqrt(foldl(+, 0, X * X))}",
+    "properties": [
+     "nonnegative",
+     "homogeneous:1"
+    ],
+    "tol": 1e-14,
+    "rationale": "Reference-BLAS DNRM2 (Hammarling): overflow-safe scaled sum of squares with state (SCALE, SSQ). The DSL has no stateful fold to express its exact rounding, so keep the legacy routine as executable reference and check the norm contract + exact positive homogeneity."
+   },
+   "lines": [
+    187,
+    217
+   ]
+  },
+  "PCOND": {
+   "kind": "kernel",
+   "static": {
+    "kind": "kernel",
+    "term": "PCOND = \u03bb(R).\n    in  {Z = R / DG}",
+    "reason": null,
+    "reason_specialized": null,
+    "specialized": null,
+    "footprint": {
+     "Z": "N",
+     "R": "N",
+     "DG": "N"
+    },
+    "reads_common": [
+     "DG"
+    ],
+    "writes_common": []
+   },
+   "spec": {
+    "arg_len": {
+     "R": "N",
+     "Z": "N"
+    },
+    "int_args": {
+     "N": "N"
+    },
+    "common_int": {},
+    "common_len": {
+     "GEOM.DG": "N"
+    },
+    "source": {
+     "N": "size (appears in footprints / passed the caller size)",
+     "R": "static footprint",
+     "Z": "static footprint"
+    }
+   },
+   "spec_source": "static",
+   "term": "PCOND = \u03bb(R).\n    in  {Z = R / DG}",
+   "term_source": "static",
+   "primitive": null,
+   "lines": [
+    72,
+    81
+   ]
+  },
+  "XPAY": {
+   "kind": "kernel",
+   "static": {
+    "kind": "kernel",
+    "term": "XPAY = \u03bb(Z, BETA, P).\n    in  {P = Z + BETA * P}",
+    "reason": null,
+    "reason_specialized": null,
+    "specialized": null,
+    "footprint": {
+     "P": "N",
+     "Z": "N"
+    },
+    "reads_common": [],
+    "writes_common": []
+   },
+   "spec": {
+    "arg_len": {
+     "Z": "N",
+     "P": "N"
+    },
+    "int_args": {
+     "N": "N"
+    },
+    "common_int": {},
+    "common_len": {},
+    "source": {
+     "N": "size (appears in footprints / passed the caller size)",
+     "Z": "static footprint",
+     "P": "static footprint"
+    }
+   },
+   "spec_source": "static",
+   "term": "XPAY = \u03bb(Z, BETA, P).\n    in  {P = Z + BETA * P}",
+   "term_source": "static",
+   "primitive": null,
+   "lines": [
+    139,
+    146
+   ]
+  },
+  "CGSOLV": {
+   "kind": "orchestration",
+   "static": {
+    "kind": "orchestration",
+    "term": "CGSOLV = \u03bb(B, X, TOL, MAXIT).\n    let Q = AMUL(X)\n    let R = B - Q\n    let Z = PCOND(R)\n    let P = DCOPY(Z)\n    let RHO = DDOT(R, Z)\n    let BNRM = DNRM2(B)\n    let ITER = 0\n    let RNORM = DNRM2(R)\n    while_loop  cond: not (RNORM <= TOL * BNRM) and not (ITER >= MAXIT)\n        let ITER = ITER + 1\n        let Q = AMUL(P)\n        let ALPHA = RHO / DDOT(P, Q)\n        let X = DAXPY(ALPHA, P, X)\n        let R = DAXPY(-ALPHA, Q, R)\n        let Z = PCOND(R)\n        let RHONEW = DDOT(R, Z)\n        let BETA = RHONEW / RHO\n        let RHO = RHONEW\n        let P = XPAY(Z, BETA, P)\n        let RNORM = DNRM2(R)\n    in  {X = X, W = [R ++ Z ++ P ++ Q], ITER = ITER, RNORM = RNORM}",
+    "reason": null,
+    "reason_specialized": null,
+    "specialized": null,
+    "footprint": {
+     "W": "4*N",
+     "X": "N",
+     "B": "N",
+     "Q": "N"
+    },
+    "reads_common": [],
+    "writes_common": []
+   },
+   "spec": {
+    "arg_len": {
+     "B": "N",
+     "X": "N",
+     "W": "4*N"
+    },
+    "int_args": {
+     "N": "N",
+     "MAXIT": "1000",
+     "ITER": "0"
+    },
+    "common_int": {},
+    "common_len": {},
+    "source": {
+     "N": "size (appears in footprints / passed the caller size)",
+     "B": "static footprint",
+     "X": "static footprint",
+     "W": "static footprint",
+     "MAXIT": "MAIN call-site constant",
+     "ITER": "output only"
+    },
+    "fixed": {
+     "TOL": 1e-10
+    },
+    "setup": [
+     "SETUP",
+     {
+      "NXI": "NX",
+      "NYI": "NY"
+     }
+    ]
+   },
+   "spec_source": "static",
+   "term": "CGSOLV = \u03bb(B, X, TOL, MAXIT).\n    let Q = AMUL(X)\n    let R = B - Q\n    let Z = PCOND(R)\n    let P = DCOPY(Z)\n    let RHO = DDOT(R, Z)\n    let BNRM = DNRM2(B)\n    let ITER = 0\n    let RNORM = DNRM2(R)\n    while_loop  cond: not (RNORM <= TOL * BNRM) and not (ITER >= MAXIT)\n        let ITER = ITER + 1\n        let Q = AMUL(P)\n        let ALPHA = RHO / DDOT(P, Q)\n        let X = DAXPY(ALPHA, P, X)\n        let R = DAXPY(-ALPHA, Q, R)\n        let Z = PCOND(R)\n        let RHONEW = DDOT(R, Z)\n        let BETA = RHONEW / RHO\n        let RHO = RHONEW\n        let P = XPAY(Z, BETA, P)\n        let RNORM = DNRM2(R)\n    in  {X = X, W = [R ++ Z ++ P ++ Q], ITER = ITER, RNORM = RNORM}",
+   "term_source": "static",
+   "primitive": null,
+   "lines": [
+    150,
+    183
+   ]
+  },
+  "SETUP": {
+   "kind": "kernel",
+   "static": {
+    "kind": "kernel",
+    "term": "SETUP = \u03bb(NXI, NYI).\n    let CK = 1 + 0.5 * sin(2 * (4 * atan(1)) * i * (1 / (1 + NXI))) * cos(4 * atan(1) * j * (1 / (1 + NYI)))\n    let t1 = 1 / (1 + NXI)\n    let t2 = 1 / (t1 * t1)\n    let t3 = 1 / (1 + NYI)\n    let t4 = 1 / (t3 * t3)\n    in  {NX = NXI, NY = NYI, HX2I = t2, HY2I = t4, CK = CK, DG = t2 * 0.5 * (CK + (i > 1 ? CK[i-1,j] : CK)) + t2 * 0.5 * (CK + (i < NXI ? CK[i+1,j] : CK)) + t4 * 0.5 * (CK + (j > 1 ? CK[i,j-1] : CK)) + t4 * 0.5 * (CK + (j < NYI ? CK[i,j+1] : CK))}",
+    "reason": null,
+    "reason_specialized": null,
+    "specialized": null,
+    "footprint": {
+     "CK": "NXI*NYI",
+     "DG": "NXI*NYI"
+    },
+    "reads_common": [
+     "CK"
+    ],
+    "writes_common": [
+     "CK",
+     "DG",
+     "HX2I",
+     "HY2I",
+     "NX",
+     "NY"
+    ]
+   },
+   "spec": {
+    "arg_len": {},
+    "int_args": {
+     "NXI": "NX",
+     "NYI": "NY"
+    },
+    "common_int": {
+     "GRID.NX": "NX",
+     "GRID.NY": "NY"
+    },
+    "common_len": {},
+    "source": {
+     "NXI": "grid extent (writes COMMON NX)",
+     "NYI": "grid extent (writes COMMON NY)"
+    },
+    "common_out": [
+     "GRID.NX",
+     "GRID.NY",
+     "GRID.HX2I",
+     "GRID.HY2I",
+     "GEOM.CK",
+     "GEOM.DG"
+    ]
+   },
+   "spec_source": "static",
+   "term": "SETUP = \u03bb(NXI, NYI).\n    let CK = 1 + 0.5 * sin(2 * (4 * atan(1)) * i * (1 / (1 + NXI))) * cos(4 * atan(1) * j * (1 / (1 + NYI)))\n    let t1 = 1 / (1 + NXI)\n    let t2 = 1 / (t1 * t1)\n    let t3 = 1 / (1 + NYI)\n    let t4 = 1 / (t3 * t3)\n    in  {NX = NXI, NY = NYI, HX2I = t2, HY2I = t4, CK = CK, DG = t2 * 0.5 * (CK + (i > 1 ? CK[i-1,j] : CK)) + t2 * 0.5 * (CK + (i < NXI ? CK[i+1,j] : CK)) + t4 * 0.5 * (CK + (j > 1 ? CK[i,j-1] : CK)) + t4 * 0.5 * (CK + (j < NYI ? CK[i,j+1] : CK))}",
+   "term_source": "static",
+   "primitive": null,
+   "lines": [
+    8,
+    42
+   ]
+  }
+ },
+ "proposals": [
+  {
+   "tool": "propose_spec",
+   "args": {
+    "unit": "DNRM2",
+    "arg_len": {
+     "X": "N"
+    },
+    "int_args": {
+     "INCX": "1"
+    },
+    "rationale": "DO 10 IX = 1,1+(N-1)*INCX,INCX reads X(1..1+(N-1)*INCX); INCX == 1 at every call site (static contract), so X(1..N)."
+   },
+   "outcome": "accepted",
+   "t": "11:52:50"
+  },
+  {
+   "tool": "propose_term",
+   "args": {
+    "unit": "DNRM2",
+    "term": "DNRM2 = \u03bb(X).\n    in  {__result__ = sqrt(foldl(+, 0, X * X))}",
+    "rationale": "Scaled sum of squares = Euclidean norm; try the direct form."
+   },
+   "outcome": "rejected: R-EQUIVALENT (float-different)",
+   "t": "11:52:51"
+  },
+  {
+   "tool": "register_primitive",
+   "args": {
+    "unit": "DNRM2",
+    "relation": "DNRM2 = \u03bb(X).\n    in  {__result__ = sqrt(foldl(+, 0, X * X))}",
+    "properties": [
+     "nonnegative",
+     "homogeneous:1"
+    ],
+    "tol": 1e-14,
+    "rationale": "Reference-BLAS DNRM2 (Hammarling): overflow-safe scaled sum of squares with state (SCALE, SSQ). The DSL has no stateful fold to express its exact rounding, so keep the legacy routine as executable reference and check the norm contract + exact positive homogeneity."
+   },
+   "outcome": "CONTRACT HOLDS (R-equivalent within tol; native code used for replay)",
+   "t": "11:52:52"
+  },
+  {
+   "tool": "run_probe",
+   "args": {
+    "unit": "DAXPY",
+    "inputs": {
+     "N": 6,
+     "DA": 0.0,
+     "DX": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "DY": [
+      -0.0,
+      1,
+      -0.0,
+      2,
+      3,
+      -0.0
+     ]
+    },
+    "size": null,
+    "rationale": "DA==0 early return; signed zeros in DY distinguish return-unchanged from DY + 0*DX"
+   },
+   "outcome": "consistent=True bitwise=True rel_err=0",
+   "t": "11:52:52"
+  },
+  {
+   "tool": "run_probe",
+   "args": {
+    "unit": "DAXPY",
+    "inputs": {
+     "N": 3,
+     "DA": 0.5,
+     "DX": [
+      1,
+      2,
+      3
+     ],
+     "DY": [
+      1,
+      1,
+      1
+     ]
+    },
+    "size": null,
+    "rationale": "N < 4: only the remainder loop runs"
+   },
+   "outcome": "consistent=True bitwise=True rel_err=0",
+   "t": "11:52:53"
+  },
+  {
+   "tool": "run_probe",
+   "args": {
+    "unit": "DAXPY",
+    "inputs": {
+     "N": 0,
+     "DA": 0.5,
+     "DX": [],
+     "DY": []
+    },
+    "size": null,
+    "rationale": "N <= 0 early return"
+   },
+   "outcome": "consistent=True bitwise=True rel_err=0",
+   "t": "11:52:54"
+  },
+  {
+   "tool": "run_probe",
+   "args": {
+    "unit": "DDOT",
+    "inputs": {
+     "N": 0,
+     "DX": [],
+     "DY": []
+    },
+    "size": null,
+    "rationale": "N <= 0 early return"
+   },
+   "outcome": "consistent=True bitwise=True rel_err=0",
+   "t": "11:52:55"
+  },
+  {
+   "tool": "run_probe",
+   "args": {
+    "unit": "DDOT",
+    "inputs": {
+     "N": 3,
+     "DX": [
+      1,
+      2,
+      3
+     ],
+     "DY": [
+      0.1,
+      0.2,
+      0.3
+     ]
+    },
+    "size": null,
+    "rationale": "N < 5: remainder loop only, jump to 60"
+   },
+   "outcome": "consistent=True bitwise=True rel_err=0",
+   "t": "11:52:55"
+  },
+  {
+   "tool": "run_probe",
+   "args": {
+    "unit": "DNRM2",
+    "inputs": {
+     "N": 0,
+     "X": []
+    },
+    "size": null,
+    "rationale": "N < 1 branch"
+   },
+   "outcome": "consistent=True bitwise=True rel_err=0",
+   "t": "11:52:56"
+  },
+  {
+   "tool": "run_probe",
+   "args": {
+    "unit": "DNRM2",
+    "inputs": {
+     "N": 1,
+     "X": [
+      -3.0
+     ]
+    },
+    "size": null,
+    "rationale": "N == 1 branch returns ABS(X(1))"
+   },
+   "outcome": "consistent=True bitwise=True rel_err=0",
+   "t": "11:52:57"
+  },
+  {
+   "tool": "run_probe",
+   "args": {
+    "unit": "DNRM2",
+    "inputs": {
+     "N": 5,
+     "X": [
+      0.0,
+      3.0,
+      0.0,
+      -4.0,
+      0.0
+     ]
+    },
+    "size": null,
+    "rationale": "zeros in X skip the update (X(IX) == 0 branch)"
+   },
+   "outcome": "consistent=True bitwise=True rel_err=0",
+   "t": "11:52:58"
+  },
+  {
+   "tool": "run_probe",
+   "args": {
+    "unit": "CGSOLV",
+    "inputs": {
+     "B": {
+      "fill": 1.0
+     },
+     "X": {
+      "fill": 0.0
+     },
+     "W": {
+      "fill": 0.0
+     },
+     "TOL": 1e-10,
+     "MAXIT": 3,
+     "RNORM": 0.0
+    },
+    "size": [
+     7,
+     5
+    ],
+    "rationale": "exit through ITER >= MAXIT instead of convergence"
+   },
+   "outcome": "consistent=True bitwise=True rel_err=0",
+   "t": "11:52:58"
+  },
+  {
+   "tool": "justify_unreachable",
+   "args": {
+    "unit": "DNRM2",
+    "line": 202,
+    "argument": "The DO loop is only reached in the ELSE branch, i.e. N >= 2 and INCX >= 1, so the upper bound 1+(N-1)*INCX >= 2 > 1 = lower bound: the zero-trip branch cannot be taken."
+   },
+   "outcome": "recorded as agent claim (not a proof)",
+   "t": "11:52:59"
+  },
+  {
+   "tool": "propose_template",
+   "args": {
+    "unit": "CGSOLV",
+    "name": "preconditioned conjugate gradient (Hestenes-Stiefel, Saad Alg. 9.1)",
+    "bindings": {
+     "A": "AMUL",
+     "Minv": "PCOND",
+     "dot": "DDOT",
+     "nrm": "DNRM2",
+     "axpy": "DAXPY",
+     "copy": "DCOPY",
+     "xpay": "XPAY"
+    },
+    "rationale": "Textbook PCG: r = b - Ax, z = M^-1 r, p = z; alpha = (r,z)/(p,Ap); x += alpha p; r -= alpha Ap; beta = (r_new,z_new)/(r,z); p = z + beta p; stop on ||r|| <= tol ||b|| or maxit."
+   },
+   "outcome": "match=False: body: 8 vs 9 statements",
+   "t": "11:52:59"
+  },
+  {
+   "tool": "propose_template",
+   "args": {
+    "unit": "CGSOLV",
+    "name": "preconditioned conjugate gradient (Hestenes-Stiefel, Saad Alg. 9.1)",
+    "bindings": {
+     "A": "AMUL",
+     "Minv": "PCOND",
+     "dot": "DDOT",
+     "nrm": "DNRM2",
+     "axpy": "DAXPY",
+     "copy": "DCOPY",
+     "xpay": "XPAY"
+    },
+    "rationale": "Same PCG; the legacy code stores A x in the work-array section Q before forming r = b - q."
+   },
+   "outcome": "match=True: alpha-equivalent (15 names matched)",
+   "t": "11:53:00"
+  },
+  {
+   "tool": "annotate",
+   "args": {
+    "subject": "AMUL",
+    "name": "-div(k grad u) with homogeneous Dirichlet BC",
+    "meaning": "Standard 5-point finite-difference/finite-volume discretisation of -d/dx(k du/dx) - d/dy(k du/dy) on the unit square, mesh h = 1/(N+1); face conductivities are arithmetic means k_{i+1/2,j} = (k_ij + k_{i+1,j})/2 (coefficient HX2I*0.5*(CK+CK[i+1,j]) = k_{i+1/2}/h^2); boundary faces use the cell value (ghost k = k_ij), u = 0 outside the grid."
+   },
+   "outcome": "recorded as agent claim",
+   "t": "11:53:01"
+  },
+  {
+   "tool": "annotate",
+   "args": {
+    "subject": "SETUP",
+    "name": "conductivity field and mesh factors",
+    "meaning": "k(x,y) = 1 + 0.5 sin(2 pi x) cos(pi y) at x = i h_x, y = j h_y; HX2I = 1/h_x^2, HY2I = 1/h_y^2; DG = diagonal of the operator."
+   },
+   "outcome": "recorded as agent claim",
+   "t": "11:53:01"
+  }
+ ],
+ "annotations": [
+  {
+   "subject": "AMUL",
+   "name": "-div(k grad u) with homogeneous Dirichlet BC",
+   "meaning": "Standard 5-point finite-difference/finite-volume discretisation of -d/dx(k du/dx) - d/dy(k du/dy) on the unit square, mesh h = 1/(N+1); face conductivities are arithmetic means k_{i+1/2,j} = (k_ij + k_{i+1,j})/2 (coefficient HX2I*0.5*(CK+CK[i+1,j]) = k_{i+1/2}/h^2); boundary faces use the cell value (ghost k = k_ij), u = 0 outside the grid.",
+   "rationale": "Read off the coefficient table: off-diagonals -k_face/h^2, diagonal DG = sum of the four face coefficients incl. boundary faces (from SETUP)."
+  },
+  {
+   "subject": "SETUP",
+   "name": "conductivity field and mesh factors",
+   "meaning": "k(x,y) = 1 + 0.5 sin(2 pi x) cos(pi y) at x = i h_x, y = j h_y; HX2I = 1/h_x^2, HY2I = 1/h_y^2; DG = diagonal of the operator.",
+   "rationale": "From the lifted SETUP term."
+  }
+ ],
+ "templates": {
+  "CGSOLV": {
+   "name": "preconditioned conjugate gradient (Hestenes-Stiefel, Saad Alg. 9.1)",
+   "bindings": {
+    "A": "AMUL",
+    "Minv": "PCOND",
+    "dot": "DDOT",
+    "nrm": "DNRM2",
+    "axpy": "DAXPY",
+    "copy": "DCOPY",
+    "xpay": "XPAY"
+   },
+   "template": "PCG = \u03bb(b, x, tol, maxit).\n    let q = A(x)\n    let r = b - q\n    let z = Minv(r)\n    let p = copy(z)\n    let rho = dot(r, z)\n    let bn = nrm(b)\n    let k = 0\n    let rn = nrm(r)\n    while_loop  cond: not (rn <= tol * bn) and not (k >= maxit)\n        let k = k + 1\n        let q = A(p)\n        let alpha = rho / dot(p, q)\n        let x = axpy(alpha, p, x)\n        let r = axpy(-alpha, q, r)\n        let z = Minv(r)\n        let rho1 = dot(r, z)\n        let beta = rho1 / rho\n        let rho = rho1\n        let p = xpay(z, beta, p)\n        let rn = nrm(r)\n    in  {X = x, ITER = k, RNORM = rn}\n",
+   "match": true,
+   "detail": "alpha-equivalent (15 names matched)",
+   "rationale": "Same PCG; the legacy code stores A x in the work-array section Q before forming r = b - q."
+  }
+ },
+ "targeted": {
+  "DAXPY": [
+   {
+    "inputs": {
+     "N": 6,
+     "DA": 0.0,
+     "DX": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "DY": [
+      -0.0,
+      1,
+      -0.0,
+      2,
+      3,
+      -0.0
+     ]
+    },
+    "size": null,
+    "rationale": "DA==0 early return; signed zeros in DY distinguish return-unchanged from DY + 0*DX",
+    "bitwise": true,
+    "rel_err": 0.0,
+    "consistent": true
+   },
+   {
+    "inputs": {
+     "N": 3,
+     "DA": 0.5,
+     "DX": [
+      1,
+      2,
+      3
+     ],
+     "DY": [
+      1,
+      1,
+      1
+     ]
+    },
+    "size": null,
+    "rationale": "N < 4: only the remainder loop runs",
+    "bitwise": true,
+    "rel_err": 0.0,
+    "consistent": true
+   },
+   {
+    "inputs": {
+     "N": 0,
+     "DA": 0.5,
+     "DX": [],
+     "DY": []
+    },
+    "size": null,
+    "rationale": "N <= 0 early return",
+    "bitwise": true,
+    "rel_err": 0.0,
+    "consistent": true
+   }
+  ],
+  "DDOT": [
+   {
+    "inputs": {
+     "N": 0,
+     "DX": [],
+     "DY": []
+    },
+    "size": null,
+    "rationale": "N <= 0 early return",
+    "bitwise": true,
+    "rel_err": 0.0,
+    "consistent": true
+   },
+   {
+    "inputs": {
+     "N": 3,
+     "DX": [
+      1,
+      2,
+      3
+     ],
+     "DY": [
+      0.1,
+      0.2,
+      0.3
+     ]
+    },
+    "size": null,
+    "rationale": "N < 5: remainder loop only, jump to 60",
+    "bitwise": true,
+    "rel_err": 0.0,
+    "consistent": true
+   }
+  ],
+  "DNRM2": [
+   {
+    "inputs": {
+     "N": 0,
+     "X": []
+    },
+    "size": null,
+    "rationale": "N < 1 branch",
+    "bitwise": true,
+    "rel_err": 0.0,
+    "consistent": true
+   },
+   {
+    "inputs": {
+     "N": 1,
+     "X": [
+      -3.0
+     ]
+    },
+    "size": null,
+    "rationale": "N == 1 branch returns ABS(X(1))",
+    "bitwise": true,
+    "rel_err": 0.0,
+    "consistent": true
+   },
+   {
+    "inputs": {
+     "N": 5,
+     "X": [
+      0.0,
+      3.0,
+      0.0,
+      -4.0,
+      0.0
+     ]
+    },
+    "size": null,
+    "rationale": "zeros in X skip the update (X(IX) == 0 branch)",
+    "bitwise": true,
+    "rel_err": 0.0,
+    "consistent": true
+   }
+  ],
+  "CGSOLV": [
+   {
+    "inputs": {
+     "B": {
+      "fill": 1.0
+     },
+     "X": {
+      "fill": 0.0
+     },
+     "W": {
+      "fill": 0.0
+     },
+     "TOL": 1e-10,
+     "MAXIT": 3,
+     "RNORM": 0.0
+    },
+    "size": [
+     7,
+     5
+    ],
+    "rationale": "exit through ITER >= MAXIT instead of convergence",
+    "bitwise": true,
+    "rel_err": 0.0,
+    "consistent": true
+   }
+  ]
+ },
+ "static": {
+  "order": [
+   "AMUL",
+   "DAXPY",
+   "DCOPY",
+   "DDOT",
+   "DNRM2",
+   "PCOND",
+   "XPAY",
+   "CGSOLV",
+   "SETUP"
+  ],
+  "callgraph": {
+   "SETUP": [],
+   "AMUL": [],
+   "PCOND": [],
+   "DDOT": [],
+   "DAXPY": [],
+   "DCOPY": [],
+   "XPAY": [],
+   "CGSOLV": [
+    "AMUL",
+    "DAXPY",
+    "DCOPY",
+    "DDOT",
+    "DNRM2",
+    "PCOND",
+    "XPAY"
+   ],
+   "DNRM2": []
+  },
+  "contracts": [
+   {
+    "unit": "CGSOLV",
+    "claim": "NX*NY == N",
+    "why": "section Q of W is used with length NX*NY by AMUL.Y and length N elsewhere",
+    "main_call_site": "holds at MAIN line 13 ({'N': 1200, 'MAXIT': 1000, 'NX': 40, 'NY': 30})"
+   },
+   {
+    "unit": "DNRM2",
+    "claim": "INCX == 1",
+    "why": "constant at all 3 call site(s) inside the library"
+   }
+  ],
+  "branches": [],
+  "loops": [
+   {
+    "unit": "AMUL",
+    "line": 52,
+    "zero_trip": "infeasible (proved)"
+   },
+   {
+    "unit": "AMUL",
+    "line": 53,
+    "zero_trip": "infeasible (proved)"
+   },
+   {
+    "unit": "DAXPY",
+    "line": 115,
+    "zero_trip": "infeasible (proved)"
+   },
+   {
+    "unit": "DAXPY",
+    "line": 120,
+    "zero_trip": "infeasible (proved)"
+   },
+   {
+    "unit": "DCOPY",
+    "line": 131,
+    "zero_trip": "feasible"
+   },
+   {
+    "unit": "DDOT",
+    "line": 93,
+    "zero_trip": "infeasible (proved)"
+   },
+   {
+    "unit": "DDOT",
+    "line": 98,
+    "zero_trip": "infeasible (proved)"
+   },
+   {
+    "unit": "PCOND",
+    "line": 77,
+    "zero_trip": "feasible"
+   },
+   {
+    "unit": "XPAY",
+    "line": 142,
+    "zero_trip": "feasible"
+   },
+   {
+    "unit": "CGSOLV",
+    "line": 158,
+    "zero_trip": "feasible"
+   },
+   {
+    "unit": "SETUP",
+    "line": 20,
+    "zero_trip": "infeasible (proved)"
+   },
+   {
+    "unit": "SETUP",
+    "line": 21,
+    "zero_trip": "infeasible (proved)"
+   },
+   {
+    "unit": "SETUP",
+    "line": 26,
+    "zero_trip": "infeasible (proved)"
+   },
+   {
+    "unit": "SETUP",
+    "line": 27,
+    "zero_trip": "infeasible (proved)"
+   }
+  ],
+  "proof_log": [
+   {
+    "unit": "AMUL",
+    "kind": "linearisation",
+    "claim": "Y(J*NX + I - NX): K = (J-1)*NX + I with I in [1..NX], J in [1..NY] is a bijection onto [1..NX*NY]",
+    "status": "proved",
+    "line": 52,
+    "detail": "lemma (column-major linearisation)"
+   },
+   {
+    "unit": "AMUL",
+    "kind": "shift-guard",
+    "claim": "CK[I-1,J+0] read only when inside the grid",
+    "status": "proved",
+    "line": 52,
+    "detail": "not (I == 1)"
+   },
+   {
+    "unit": "AMUL",
+    "kind": "shift-guard",
+    "claim": "X[I-1,J+0] read only when inside the grid",
+    "status": "proved",
+    "line": 52,
+    "detail": "not (I == 1)"
+   },
+   {
+    "unit": "AMUL",
+    "kind": "shift-guard",
+    "claim": "CK[I+1,J+0] read only when inside the grid",
+    "status": "proved",
+    "line": 52,
+    "detail": "not (I == NX)"
+   },
+   {
+    "unit": "AMUL",
+    "kind": "shift-guard",
+    "claim": "X[I+1,J+0] read only when inside the grid",
+    "status": "proved",
+    "line": 52,
+    "detail": "not (I == NX)"
+   },
+   {
+    "unit": "AMUL",
+    "kind": "shift-guard",
+    "claim": "CK[I+0,J-1] read only when inside the grid",
+    "status": "proved",
+    "line": 52,
+    "detail": "not (J == 1)"
+   },
+   {
+    "unit": "AMUL",
+    "kind": "shift-guard",
+    "claim": "X[I+0,J-1] read only when inside the grid",
+    "status": "proved",
+    "line": 52,
+    "detail": "not (J == 1)"
+   },
+   {
+    "unit": "AMUL",
+    "kind": "shift-guard",
+    "claim": "CK[I+0,J+1] read only when inside the grid",
+    "status": "proved",
+    "line": 52,
+    "detail": "not (J == NY)"
+   },
+   {
+    "unit": "AMUL",
+    "kind": "shift-guard",
+    "claim": "X[I+0,J+1] read only when inside the grid",
+    "status": "proved",
+    "line": 52,
+    "detail": "not (J == NY)"
+   },
+   {
+    "unit": "AMUL",
+    "kind": "coverage",
+    "claim": "Y: [1..NX*NY] = [1..NX*NY]",
+    "status": "proved",
+    "line": null,
+    "detail": "true"
+   },
+   {
+    "unit": "AMUL",
+    "kind": "extent",
+    "claim": "Y: every path produces the result over [1..NX*NY]",
+    "status": "proved",
+    "line": null,
+    "detail": "1 path(s)"
+   },
+   {
+    "unit": "DAXPY",
+    "kind": "unroll-exact",
+    "claim": "loop line 120: (N - DAXPY_mod1 + 1 + 1) mod 4 == 0 (unrolled body covers exactly [lo..hi])",
+    "status": "proved",
+    "line": 120,
+    "detail": "not (N <= 0) and DAXPY_mod1 == 0"
+   },
+   {
+    "unit": "DAXPY",
+    "kind": "unroll-exact",
+    "claim": "loop line 120: (N - DAXPY_mod1 + 1 + 1) mod 4 == 0 (unrolled body covers exactly [lo..hi])",
+    "status": "proved",
+    "line": 120,
+    "detail": "not (N <= 0) and not (DAXPY_mod1 == 0) and not (N < 4)"
+   },
+   {
+    "unit": "DAXPY",
+    "kind": "coverage",
+    "claim": "DY: [DAXPY_mod1 + 1..N] = [1..N]",
+    "status": "proved",
+    "line": null,
+    "detail": "not (N <= 0) and DAXPY_mod1 == 0"
+   },
+   {
+    "unit": "DAXPY",
+    "kind": "coverage",
+    "claim": "DY: [1..DAXPY_mod1] = [1..DAXPY_mod1]",
+    "status": "proved",
+    "line": null,
+    "detail": "not (N <= 0) and not (DAXPY_mod1 == 0) and N < 4"
+   },
+   {
+    "unit": "DAXPY",
+    "kind": "coverage",
+    "claim": "DY: [1..DAXPY_mod1] ++ [DAXPY_mod1 + 1..N] = [1..N]",
+    "status": "proved",
+    "line": null,
+    "detail": "not (N <= 0) and not (DAXPY_mod1 == 0) and not (N < 4)"
+   },
+   {
+    "unit": "DAXPY",
+    "kind": "extent",
+    "claim": "DY: every path produces the result over [1..N]",
+    "status": "proved",
+    "line": null,
+    "detail": "3 path(s)"
+   },
+   {
+    "unit": "DAXPY",
+    "kind": "vacuous-path",
+    "claim": "DY: path [N <= 0] has empty domain [1..N] -> agrees with the main result",
+    "status": "proved",
+    "line": null,
+    "detail": null
+   },
+   {
+    "unit": "DAXPY",
+    "kind": "data-dependent-path",
+    "claim": "DY: separate IEEE semantics when DA == 0",
+    "status": "proved",
+    "line": null,
+    "detail": "kept as an explicit Where (not merged)"
+   },
+   {
+    "unit": "DCOPY",
+    "kind": "coverage",
+    "claim": "DY: [1..N] = [1..N]",
+    "status": "proved",
+    "line": null,
+    "detail": "true"
+   },
+   {
+    "unit": "DCOPY",
+    "kind": "extent",
+    "claim": "DY: every path produces the result over [1..N]",
+    "status": "proved",
+    "line": null,
+    "detail": "1 path(s)"
+   },
+   {
+    "unit": "DDOT",
+    "kind": "unroll-exact",
+    "claim": "loop line 98: (N - DDOT_mod1 + 1 + 1) mod 5 == 0 (unrolled body covers exactly [lo..hi])",
+    "status": "proved",
+    "line": 98,
+    "detail": "not (N <= 0) and DDOT_mod1 == 0"
+   },
+   {
+    "unit": "DDOT",
+    "kind": "unroll-exact",
+    "claim": "loop line 98: (N - DDOT_mod1 + 1 + 1) mod 5 == 0 (unrolled body covers exactly [lo..hi])",
+    "status": "proved",
+    "line": 98,
+    "detail": "not (N <= 0) and not (DDOT_mod1 == 0) and not (N < 5)"
+   },
+   {
+    "unit": "DDOT",
+    "kind": "coverage",
+    "claim": "reduction: [DDOT_mod1 + 1..N] = [1..N]",
+    "status": "proved",
+    "line": null,
+    "detail": "not (N <= 0) and DDOT_mod1 == 0"
+   },
+   {
+    "unit": "DDOT",
+    "kind": "coverage",
+    "claim": "reduction: [1..DDOT_mod1] = [1..DDOT_mod1]",
+    "status": "proved",
+    "line": null,
+    "detail": "not (N <= 0) and not (DDOT_mod1 == 0) and N < 5"
+   },
+   {
+    "unit": "DDOT",
+    "kind": "coverage",
+    "claim": "reduction: [1..DDOT_mod1] ++ [DDOT_mod1 + 1..N] = [1..N]",
+    "status": "proved",
+    "line": null,
+    "detail": "not (N <= 0) and not (DDOT_mod1 == 0) and not (N < 5)"
+   },
+   {
+    "unit": "DDOT",
+    "kind": "extent",
+    "claim": "__result__: every path produces the result over [1..N]",
+    "status": "proved",
+    "line": null,
+    "detail": "3 path(s)"
+   },
+   {
+    "unit": "DDOT",
+    "kind": "vacuous-path",
+    "claim": "__result__: path [N <= 0] has empty domain [1..N] -> agrees with the main result",
+    "status": "proved",
+    "line": null,
+    "detail": null
+   },
+   {
+    "unit": "PCOND",
+    "kind": "coverage",
+    "claim": "Z: [1..N] = [1..N]",
+    "status": "proved",
+    "line": null,
+    "detail": "true"
+   },
+   {
+    "unit": "PCOND",
+    "kind": "extent",
+    "claim": "Z: every path produces the result over [1..N]",
+    "status": "proved",
+    "line": null,
+    "detail": "1 path(s)"
+   },
+   {
+    "unit": "XPAY",
+    "kind": "coverage",
+    "claim": "P: [1..N] = [1..N]",
+    "status": "proved",
+    "line": null,
+    "detail": "true"
+   },
+   {
+    "unit": "XPAY",
+    "kind": "extent",
+    "claim": "P: every path produces the result over [1..N]",
+    "status": "proved",
+    "line": null,
+    "detail": "1 path(s)"
+   },
+   {
+    "unit": "CGSOLV",
+    "kind": "coverage",
+    "claim": "R: [1..N] = [1..N]",
+    "status": "proved",
+    "line": null,
+    "detail": "true"
+   },
+   {
+    "unit": "CGSOLV",
+    "kind": "footprint",
+    "claim": "W section R passed to DNRM2.X: callee footprint unknown (opaque)",
+    "status": "FAILED",
+    "line": null,
+    "detail": "needs agent-proposed footprint (checked dynamically by canaries)"
+   },
+   {
+    "unit": "CGSOLV",
+    "kind": "footprint",
+    "claim": "W section R passed to DNRM2.X: callee footprint unknown (opaque)",
+    "status": "FAILED",
+    "line": null,
+    "detail": "needs agent-proposed footprint (checked dynamically by canaries)"
+   },
+   {
+    "unit": "CGSOLV",
+    "kind": "partition",
+    "claim": "W = R[1..N] ++ Z[N + 1..2*N] ++ P[2*N + 1..3*N] ++ Q[3*N + 1..4*N]  (disjoint, tiles [1..4*N])",
+    "status": "proved",
+    "line": null,
+    "detail": "assuming section lengths >= 1"
+   },
+   {
+    "unit": "SETUP",
+    "kind": "linearisation",
+    "claim": "CK(J*NXI + I - NXI): K = (J-1)*NXI + I with I in [1..NXI], J in [1..NYI] is a bijection onto [1..NXI*NYI]",
+    "status": "proved",
+    "line": 20,
+    "detail": "lemma (column-major linearisation)"
+   },
+   {
+    "unit": "SETUP",
+    "kind": "coverage",
+    "claim": "CK: [1..NXI*NYI] = [1..NXI*NYI]",
+    "status": "proved",
+    "line": null,
+    "detail": "true"
+   },
+   {
+    "unit": "SETUP",
+    "kind": "linearisation",
+    "claim": "DG(J*NXI + I - NXI): K = (J-1)*NXI + I with I in [1..NXI], J in [1..NYI] is a bijection onto [1..NXI*NYI]",
+    "status": "proved",
+    "line": 26,
+    "detail": "lemma (column-major linearisation)"
+   },
+   {
+    "unit": "SETUP",
+    "kind": "shift-guard",
+    "claim": "CK[I-1,J+0] read only when inside the grid",
+    "status": "proved",
+    "line": 26,
+    "detail": "I > 1"
+   },
+   {
+    "unit": "SETUP",
+    "kind": "shift-guard",
+    "claim": "CK[I+1,J+0] read only when inside the grid",
+    "status": "proved",
+    "line": 26,
+    "detail": "I < NXI"
+   },
+   {
+    "unit": "SETUP",
+    "kind": "shift-guard",
+    "claim": "CK[I+0,J-1] read only when inside the grid",
+    "status": "proved",
+    "line": 26,
+    "detail": "J > 1"
+   },
+   {
+    "unit": "SETUP",
+    "kind": "shift-guard",
+    "claim": "CK[I+0,J+1] read only when inside the grid",
+    "status": "proved",
+    "line": 26,
+    "detail": "J < NYI"
+   },
+   {
+    "unit": "SETUP",
+    "kind": "extent",
+    "claim": "CK: every path produces the result over [1..NXI*NYI]",
+    "status": "proved",
+    "line": null,
+    "detail": "1 path(s)"
+   },
+   {
+    "unit": "SETUP",
+    "kind": "coverage",
+    "claim": "DG: [1..NXI*NYI] = [1..NXI*NYI]",
+    "status": "proved",
+    "line": null,
+    "detail": "true"
+   },
+   {
+    "unit": "SETUP",
+    "kind": "extent",
+    "claim": "DG: every path produces the result over [1..NXI*NYI]",
+    "status": "proved",
+    "line": null,
+    "detail": "1 path(s)"
+   },
+   {
+    "unit": "AMUL",
+    "kind": "zero-trip",
+    "claim": "DO loop at line 52 executes at least once on every path",
+    "status": "proved",
+    "line": 52,
+    "detail": null
+   },
+   {
+    "unit": "AMUL",
+    "kind": "zero-trip",
+    "claim": "DO loop at line 53 executes at least once on every path",
+    "status": "proved",
+    "line": 53,
+    "detail": null
+   },
+   {
+    "unit": "DAXPY",
+    "kind": "zero-trip",
+    "claim": "DO loop at line 115 executes at least once on every path",
+    "status": "proved",
+    "line": 115,
+    "detail": null
+   },
+   {
+    "unit": "DAXPY",
+    "kind": "zero-trip",
+    "claim": "DO loop at line 120 executes at least once on every path",
+    "status": "proved",
+    "line": 120,
+    "detail": null
+   },
+   {
+    "unit": "DDOT",
+    "kind": "zero-trip",
+    "claim": "DO loop at line 93 executes at least once on every path",
+    "status": "proved",
+    "line": 93,
+    "detail": null
+   },
+   {
+    "unit": "DDOT",
+    "kind": "zero-trip",
+    "claim": "DO loop at line 98 executes at least once on every path",
+    "status": "proved",
+    "line": 98,
+    "detail": null
+   },
+   {
+    "unit": "SETUP",
+    "kind": "zero-trip",
+    "claim": "DO loop at line 20 executes at least once on every path",
+    "status": "proved",
+    "line": 20,
+    "detail": null
+   },
+   {
+    "unit": "SETUP",
+    "kind": "zero-trip",
+    "claim": "DO loop at line 21 executes at least once on every path",
+    "status": "proved",
+    "line": 21,
+    "detail": null
+   },
+   {
+    "unit": "SETUP",
+    "kind": "zero-trip",
+    "claim": "DO loop at line 26 executes at least once on every path",
+    "status": "proved",
+    "line": 26,
+    "detail": null
+   },
+   {
+    "unit": "SETUP",
+    "kind": "zero-trip",
+    "claim": "DO loop at line 27 executes at least once on every path",
+    "status": "proved",
+    "line": 27,
+    "detail": null
+   }
+  ],
+  "main_calls": [
+   {
+    "callee": "SETUP",
+    "line": 8,
+    "args": [
+     40,
+     30
+    ]
+   },
+   {
+    "callee": "CGSOLV",
+    "line": 13,
+    "args": [
+     1200,
+     [
+      "array",
+      "B"
+     ],
+     [
+      "array",
+      "X"
+     ],
+     [
+      "array",
+      "W"
+     ],
+     1e-10,
+     1000,
+     "Name(n='ITER')",
+     "Name(n='RNORM')"
+    ]
+   }
+  ],
+  "proofs": {
+   "operators": {
+    "AMUL": {
+     "param": "X",
+     "symmetric": true,
+     "pairs": [
+      {
+       "shift": [
+        1,
+        0
+       ],
+       "coef": "-(HX2I * 0.5 * (CK + CK[i+1,j]))",
+       "partner": "-(HX2I * 0.5 * (CK + CK[i-1,j]))",
+       "ok": true
+      },
+      {
+       "shift": [
+        0,
+        1
+       ],
+       "coef": "-(HY2I * 0.5 * (CK + CK[i,j+1]))",
+       "partner": "-(HY2I * 0.5 * (CK + CK[i,j-1]))",
+       "ok": true
+      }
+     ],
+     "diagonal": [
+      "DG"
+     ],
+     "diag_unconditional": true,
+     "shifts": [
+      [
+       -1,
+       0
+      ],
+      [
+       0,
+       -1
+      ],
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       1,
+       0
+      ]
+     ]
+    }
+   },
+   "preconditioners": {
+    "PCOND": {
+     "operator": "AMUL",
+     "kind": "Jacobi",
+     "diagonal": "DG"
+    }
+   },
+   "spd": {
+    "AMUL": {
+     "CK_range": [
+      0.5,
+      1.5
+     ],
+     "HX2I>0": true,
+     "HY2I>0": true,
+     "diag_positive": true,
+     "dominant_everywhere": true,
+     "strict_on_boundary": true,
+     "offdiag_nonpositive": true,
+     "SPD": true,
+     "coefficient_source": "SETUP"
+    }
+   },
+   "degree": {
+    "AMUL": {
+     "X": {
+      "degree": 1,
+      "per_output": {
+       "Y": 1
+      },
+      "ieee_only_branches": []
+     }
+    },
+    "DAXPY": {
+     "DA": {
+      "degree": 1,
+      "per_output": {
+       "DY": 1
+      },
+      "ieee_only_branches": [
+       "DA == 0"
+      ]
+     },
+     "DX": {
+      "degree": 1,
+      "per_output": {
+       "DY": 1
+      },
+      "ieee_only_branches": []
+     },
+     "DY": {
+      "degree": 1,
+      "per_output": {
+       "DY": 1
+      },
+      "ieee_only_branches": []
+     }
+    },
+    "DCOPY": {
+     "DX": {
+      "degree": 1,
+      "per_output": {
+       "DY": 1
+      },
+      "ieee_only_branches": []
+     }
+    },
+    "DDOT": {
+     "DX": {
+      "degree": 1,
+      "per_output": {
+       "__result__": 1
+      },
+      "ieee_only_branches": []
+     },
+     "DY": {
+      "degree": 1,
+      "per_output": {
+       "__result__": 1
+      },
+      "ieee_only_branches": []
+     }
+    },
+    "PCOND": {
+     "R": {
+      "degree": 1,
+      "per_output": {
+       "Z": 1
+      },
+      "ieee_only_branches": []
+     }
+    },
+    "XPAY": {
+     "Z": {
+      "degree": 1,
+      "per_output": {
+       "P": 1
+      },
+      "ieee_only_branches": []
+     },
+     "BETA": {
+      "degree": 1,
+      "per_output": {
+       "P": 1
+      },
+      "ieee_only_branches": []
+     },
+     "P": {
+      "degree": 1,
+      "per_output": {
+       "P": 1
+      },
+      "ieee_only_branches": []
+     }
+    }
+   }
+  }
+ },
+ "verification": {
+  "AMUL": {
+   "sizes": [
+    [
+     7,
+     5
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     9,
+     12
+    ]
+   ],
+   "oob": [],
+   "V1_max_rel_err": 0.0,
+   "V2_max_rel_err": 0.0,
+   "V3_bitwise": true,
+   "n_probes": 30,
+   "status": "BITWISE-EQUIVALENT"
+  },
+  "DAXPY": {
+   "sizes": [
+    [
+     7,
+     5
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     9,
+     12
+    ]
+   ],
+   "oob": [],
+   "V1_max_rel_err": 0.0,
+   "V2_max_rel_err": 0.0,
+   "V3_bitwise": true,
+   "n_probes": 30,
+   "status": "BITWISE-EQUIVALENT"
+  },
+  "DCOPY": {
+   "sizes": [
+    [
+     7,
+     5
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     9,
+     12
+    ]
+   ],
+   "oob": [],
+   "V1_max_rel_err": 0.0,
+   "V2_max_rel_err": 0.0,
+   "V3_bitwise": true,
+   "n_probes": 25,
+   "status": "BITWISE-EQUIVALENT"
+  },
+  "DDOT": {
+   "sizes": [
+    [
+     7,
+     5
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     9,
+     12
+    ]
+   ],
+   "oob": [],
+   "V1_max_rel_err": 0.0,
+   "V2_max_rel_err": 0.0,
+   "V3_bitwise": true,
+   "n_probes": 30,
+   "status": "BITWISE-EQUIVALENT"
+  },
+  "DNRM2": {
+   "sizes": [
+    [
+     7,
+     5
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     9,
+     12
+    ]
+   ],
+   "max_rel_err": 3.8314428876955425e-16,
+   "n_probes": 30,
+   "properties": {
+    "nonnegative": true,
+    "homogeneous:1": true
+   },
+   "oob": [],
+   "tol": 1e-14,
+   "status": "CONTRACT HOLDS (R-equivalent within tol; native code used for replay)"
+  },
+  "PCOND": {
+   "sizes": [
+    [
+     7,
+     5
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     9,
+     12
+    ]
+   ],
+   "oob": [],
+   "V1_max_rel_err": 0.0,
+   "V2_max_rel_err": 0.0,
+   "V3_bitwise": true,
+   "n_probes": 30,
+   "status": "BITWISE-EQUIVALENT"
+  },
+  "XPAY": {
+   "sizes": [
+    [
+     7,
+     5
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     9,
+     12
+    ]
+   ],
+   "oob": [],
+   "V1_max_rel_err": 0.0,
+   "V2_max_rel_err": 0.0,
+   "V3_bitwise": true,
+   "n_probes": 30,
+   "status": "BITWISE-EQUIVALENT"
+  },
+  "CGSOLV": {
+   "sizes": [
+    [
+     7,
+     5
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     9,
+     12
+    ]
+   ],
+   "oob": [],
+   "V1_max_rel_err": 0.0,
+   "V2_max_rel_err": null,
+   "V3_bitwise": true,
+   "n_probes": 24,
+   "status": "BITWISE-EQUIVALENT"
+  },
+  "SETUP": {
+   "sizes": [
+    [
+     7,
+     5
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     9,
+     12
+    ]
+   ],
+   "oob": [],
+   "V1_max_rel_err": 0.0,
+   "V2_max_rel_err": null,
+   "V3_bitwise": true,
+   "n_probes": 24,
+   "status": "BITWISE-EQUIVALENT"
+  }
+ },
+ "dynamic": {
+  "AMUL": {
+   "write_set": [
+    "Y"
+   ],
+   "read_set": [
+    "X",
+    "GRID.HX2I",
+    "GRID.HY2I",
+    "GEOM.CK",
+    "GEOM.DG"
+   ],
+   "oob": [],
+   "degree": {
+    "X": 1,
+    "GRID.HX2I": 1,
+    "GRID.HY2I": 1,
+    "GEOM.CK": 1,
+    "GEOM.DG": 1
+   },
+   "homogeneity": {
+    "X": 1,
+    "GRID.HX2I": null,
+    "GRID.HY2I": null,
+    "GEOM.CK": null,
+    "GEOM.DG": null
+   },
+   "shape": {
+    "X->Y": [
+     "stencil2d",
+     {
+      "grid": [
+       7,
+       5
+      ],
+      "offsets": [
+       [
+        -1,
+        0
+       ],
+       [
+        0,
+        -1
+       ],
+       [
+        0,
+        0
+       ],
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      "boundary": "truncated (homogeneous Dirichlet)"
+     }
+    ]
+   }
+  },
+  "DAXPY": {
+   "write_set": [
+    "DY"
+   ],
+   "read_set": [
+    "DA",
+    "DX",
+    "DY"
+   ],
+   "oob": [],
+   "degree": {
+    "DA": 1,
+    "DX": 1,
+    "DY": 1
+   },
+   "homogeneity": {
+    "DA": null,
+    "DX": null,
+    "DY": null
+   },
+   "shape": {
+    "DX->DY": [
+     "map",
+     {}
+    ],
+    "DY->DY": [
+     "map",
+     {}
+    ]
+   }
+  },
+  "DCOPY": {
+   "write_set": [
+    "DY"
+   ],
+   "read_set": [
+    "DX"
+   ],
+   "oob": [],
+   "degree": {
+    "DX": 1
+   },
+   "homogeneity": {
+    "DX": 1
+   },
+   "shape": {
+    "DX->DY": [
+     "map",
+     {}
+    ]
+   }
+  },
+  "DDOT": {
+   "write_set": [
+    "__result__"
+   ],
+   "read_set": [
+    "DX",
+    "DY"
+   ],
+   "oob": [],
+   "degree": {
+    "DX": 1,
+    "DY": 1
+   },
+   "homogeneity": {
+    "DX": 1,
+    "DY": 1
+   },
+   "shape": {
+    "DX->__result__": [
+     "fold",
+     {
+      "over": 35
+     }
+    ],
+    "DY->__result__": [
+     "fold",
+     {
+      "over": 35
+     }
+    ]
+   }
+  },
+  "DNRM2": {
+   "write_set": [
+    "__result__"
+   ],
+   "read_set": [
+    "X"
+   ],
+   "oob": [],
+   "degree": {
+    "X": null
+   },
+   "homogeneity": {
+    "X": 1
+   },
+   "shape": {
+    "X->__result__": [
+     "fold",
+     {
+      "over": 35
+     }
+    ]
+   }
+  },
+  "PCOND": {
+   "write_set": [
+    "Z"
+   ],
+   "read_set": [
+    "R",
+    "GEOM.DG"
+   ],
+   "oob": [],
+   "degree": {
+    "R": 1,
+    "GEOM.DG": null
+   },
+   "homogeneity": {
+    "R": 1,
+    "GEOM.DG": -1
+   },
+   "shape": {
+    "R->Z": [
+     "map",
+     {}
+    ]
+   }
+  },
+  "XPAY": {
+   "write_set": [
+    "P"
+   ],
+   "read_set": [
+    "Z",
+    "BETA",
+    "P"
+   ],
+   "oob": [],
+   "degree": {
+    "Z": 1,
+    "BETA": 1,
+    "P": 1
+   },
+   "homogeneity": {
+    "Z": null,
+    "BETA": null,
+    "P": null
+   },
+   "shape": {
+    "Z->P": [
+     "map",
+     {}
+    ],
+    "P->P": [
+     "map",
+     {}
+    ]
+   }
+  },
+  "CGSOLV": {
+   "write_set": [
+    "X",
+    "W",
+    "ITER",
+    "RNORM"
+   ],
+   "read_set": [
+    "B",
+    "X",
+    "TOL"
+   ],
+   "oob": [],
+   "degree": {},
+   "homogeneity": {},
+   "shape": {}
+  },
+  "SETUP": {
+   "error": "'NX'"
+  }
+ },
+ "operator_dynamic": {
+  "AMUL": {
+   "sizes": [
+    [
+     7,
+     5
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     9,
+     12
+    ]
+   ],
+   "symmetric_exact": true,
+   "diag_equals": {
+    "DG": true
+   },
+   "dominant_to_roundoff": true
+  }
+ },
+ "coverage": {
+  "DDOT": [
+   {
+    "line": 98,
+    "src": "DO 50 I = MP1,N,5",
+    "why": [
+     "branch not taken"
+    ],
+    "closed_by": "static proof: the zero-trip branch of this DO loop is infeasible on every path"
+   }
+  ],
+  "DAXPY": [
+   {
+    "line": 120,
+    "src": "DO 50 I = MP1,N,4",
+    "why": [
+     "branch not taken"
+    ],
+    "closed_by": "static proof: the zero-trip branch of this DO loop is infeasible on every path"
+   }
+  ],
+  "DNRM2": [
+   {
+    "line": 202,
+    "src": "DO 10 IX = 1,1 + (N-1)*INCX,INCX",
+    "why": [
+     "branch not taken"
+    ],
+    "closed_by": "agent claim (unverified): The DO loop is only reached in the ELSE branch, i.e. N >= 2 and INCX >= 1, so the upper bound 1+(N-1)*INCX >= 2 > 1 = lower bound: the zero-trip branch cannot be taken."
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "01ab1942",
+   "subject": "AMUL",
+   "claim": "semantics == lifted term (order-preserving, bitwise)",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "lifted by the static analyser (kernel mode)"
+    },
+    {
+     "kind": "dynamic-bitwise",
+     "ok": true,
+     "detail": "BITWISE-EQUIVALENT; 30 probes at sizes [[7, 5], [6, 8], [9, 12]]; V1 rel.err 0.0, V2 rel.err 0.0"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "fe4fb42b",
+   "subject": "AMUL",
+   "claim": "reads ['CK', 'DG', 'HX2I', 'HY2I', 'X'] -> writes ['Y']",
+   "evidence": [
+    {
+     "kind": "static-structural",
+     "ok": true,
+     "detail": "from lifted term"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "probed write set ['Y'], read set ['CK', 'DG', 'HX2I', 'HY2I', 'X']"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "70f02ec9",
+   "subject": "AMUL",
+   "claim": "polynomial degree in X = 1",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "abstract interpretation"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "finite differences: 1"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "7dc082bb",
+   "subject": "AMUL",
+   "claim": "array footprints Y[1..NX*NY], DG[1..NX*NY], X[1..NX*NY], CK[1..NX*NY]",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "loop-range analysis + z3"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "tagged-NaN canaries untouched"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "6a2b8e91",
+   "subject": "DAXPY",
+   "claim": "semantics == lifted term (order-preserving, bitwise)",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "lifted by the static analyser (kernel mode)"
+    },
+    {
+     "kind": "dynamic-bitwise",
+     "ok": true,
+     "detail": "BITWISE-EQUIVALENT; 30 probes at sizes [[7, 5], [6, 8], [9, 12]]; V1 rel.err 0.0, V2 rel.err 0.0"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "55cfe59a",
+   "subject": "DAXPY",
+   "claim": "reads ['DA', 'DX', 'DY'] -> writes ['DY']",
+   "evidence": [
+    {
+     "kind": "static-structural",
+     "ok": true,
+     "detail": "from lifted term"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "probed write set ['DY'], read set ['DA', 'DX', 'DY']"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "efa6ea12",
+   "subject": "DAXPY",
+   "claim": "polynomial degree in DA = 1 (branch ['DA == 0'] is IEEE-only: equal over R)",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "abstract interpretation"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "finite differences: 1"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "e04c2e28",
+   "subject": "DAXPY",
+   "claim": "polynomial degree in DX = 1",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "abstract interpretation"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "finite differences: 1"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "42b4eb15",
+   "subject": "DAXPY",
+   "claim": "polynomial degree in DY = 1",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "abstract interpretation"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "finite differences: 1"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "c8b9fdbf",
+   "subject": "DAXPY",
+   "claim": "array footprints DY[1..N], DX[1..N]",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "loop-range analysis + z3"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "tagged-NaN canaries untouched"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "eb477f88",
+   "subject": "DCOPY",
+   "claim": "semantics == lifted term (order-preserving, bitwise)",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "lifted by the static analyser (kernel mode)"
+    },
+    {
+     "kind": "dynamic-bitwise",
+     "ok": true,
+     "detail": "BITWISE-EQUIVALENT; 25 probes at sizes [[7, 5], [6, 8], [9, 12]]; V1 rel.err 0.0, V2 rel.err 0.0"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "0075ce4c",
+   "subject": "DCOPY",
+   "claim": "reads ['DX'] -> writes ['DY']",
+   "evidence": [
+    {
+     "kind": "static-structural",
+     "ok": true,
+     "detail": "from lifted term"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "probed write set ['DY'], read set ['DX']"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "ff9b94f1",
+   "subject": "DCOPY",
+   "claim": "polynomial degree in DX = 1",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "abstract interpretation"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "finite differences: 1"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "2fcb674b",
+   "subject": "DCOPY",
+   "claim": "array footprints DY[1..N], DX[1..N]",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "loop-range analysis + z3"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "tagged-NaN canaries untouched"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "9261af30",
+   "subject": "DDOT",
+   "claim": "semantics == lifted term (order-preserving, bitwise)",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "lifted by the static analyser (kernel mode)"
+    },
+    {
+     "kind": "dynamic-bitwise",
+     "ok": true,
+     "detail": "BITWISE-EQUIVALENT; 30 probes at sizes [[7, 5], [6, 8], [9, 12]]; V1 rel.err 0.0, V2 rel.err 0.0"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "d3991677",
+   "subject": "DDOT",
+   "claim": "reads ['DX', 'DY'] -> writes ['__result__']",
+   "evidence": [
+    {
+     "kind": "static-structural",
+     "ok": true,
+     "detail": "from lifted term"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "probed write set ['__result__'], read set ['DX', 'DY']"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "258ba4d3",
+   "subject": "DDOT",
+   "claim": "polynomial degree in DX = 1",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "abstract interpretation"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "finite differences: 1"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "23414d78",
+   "subject": "DDOT",
+   "claim": "polynomial degree in DY = 1",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "abstract interpretation"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "finite differences: 1"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "e7b83071",
+   "subject": "DDOT",
+   "claim": "array footprints DX[1..N], DY[1..N]",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "loop-range analysis + z3"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "tagged-NaN canaries untouched"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "34b39219",
+   "subject": "DNRM2",
+   "claim": "opaque primitive with contract in  {__result__ = sqrt(foldl(+, 0, X * X))} and ['nonnegative', 'homogeneous:1']",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": null,
+     "detail": "static lifting failed: line 202: loop-carried state (SCALE, SSQ) with an update that is not a sequential sum -> not a recognised reduction"
+    },
+    {
+     "kind": "agent-claim",
+     "ok": null,
+     "detail": "Reference-BLAS DNRM2 (Hammarling): overflow-safe scaled sum of squares with state (SCALE, SSQ). The DSL has no stateful fold to express its exact rounding, so keep the legacy routine as executable reference and check the norm contract + exact positive homogeneity."
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "CONTRACT HOLDS (R-equivalent within tol; native code used for replay); max rel.err 3.8314428876955425e-16 (tol 1e-14); properties {'nonnegative': True, 'homogeneous:1': True}; 30 probes"
+    }
+   ],
+   "status": "TESTED (dynamic only)"
+  },
+  {
+   "id": "6d48c8f2",
+   "subject": "DNRM2",
+   "claim": "array lengths {\"X\": \"N\"}",
+   "evidence": [
+    {
+     "kind": "agent-claim",
+     "ok": null,
+     "detail": "spec proposed by agent"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "tagged-NaN canaries"
+    }
+   ],
+   "status": "TESTED (dynamic only)"
+  },
+  {
+   "id": "9c817a51",
+   "subject": "PCOND",
+   "claim": "semantics == lifted term (order-preserving, bitwise)",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "lifted by the static analyser (kernel mode)"
+    },
+    {
+     "kind": "dynamic-bitwise",
+     "ok": true,
+     "detail": "BITWISE-EQUIVALENT; 30 probes at sizes [[7, 5], [6, 8], [9, 12]]; V1 rel.err 0.0, V2 rel.err 0.0"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "bd160015",
+   "subject": "PCOND",
+   "claim": "reads ['DG', 'R'] -> writes ['Z']",
+   "evidence": [
+    {
+     "kind": "static-structural",
+     "ok": true,
+     "detail": "from lifted term"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "probed write set ['Z'], read set ['DG', 'R']"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "c30577ff",
+   "subject": "PCOND",
+   "claim": "polynomial degree in R = 1",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "abstract interpretation"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "finite differences: 1"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "73c0fef6",
+   "subject": "PCOND",
+   "claim": "array footprints Z[1..N], R[1..N], DG[1..N]",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "loop-range analysis + z3"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "tagged-NaN canaries untouched"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "77df1958",
+   "subject": "XPAY",
+   "claim": "semantics == lifted term (order-preserving, bitwise)",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "lifted by the static analyser (kernel mode)"
+    },
+    {
+     "kind": "dynamic-bitwise",
+     "ok": true,
+     "detail": "BITWISE-EQUIVALENT; 30 probes at sizes [[7, 5], [6, 8], [9, 12]]; V1 rel.err 0.0, V2 rel.err 0.0"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "5fe5c785",
+   "subject": "XPAY",
+   "claim": "reads ['BETA', 'P', 'Z'] -> writes ['P']",
+   "evidence": [
+    {
+     "kind": "static-structural",
+     "ok": true,
+     "detail": "from lifted term"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "probed write set ['P'], read set ['BETA', 'P', 'Z']"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "cf412809",
+   "subject": "XPAY",
+   "claim": "polynomial degree in Z = 1",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "abstract interpretation"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "finite differences: 1"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "9684df87",
+   "subject": "XPAY",
+   "claim": "polynomial degree in BETA = 1",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "abstract interpretation"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "finite differences: 1"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "7ad6df02",
+   "subject": "XPAY",
+   "claim": "polynomial degree in P = 1",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "abstract interpretation"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "finite differences: 1"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "df089e68",
+   "subject": "XPAY",
+   "claim": "array footprints P[1..N], Z[1..N]",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "loop-range analysis + z3"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "tagged-NaN canaries untouched"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "e0912546",
+   "subject": "CGSOLV",
+   "claim": "semantics == lifted term (order-preserving, bitwise)",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "lifted by the static analyser (orchestration mode)"
+    },
+    {
+     "kind": "dynamic-bitwise",
+     "ok": true,
+     "detail": "BITWISE-EQUIVALENT; 24 probes at sizes [[7, 5], [6, 8], [9, 12]]; V1 rel.err 0.0, V2 rel.err None"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "6a1ce4e2",
+   "subject": "CGSOLV",
+   "claim": "reads ['B', 'TOL', 'X'] -> writes ['ITER', 'RNORM', 'W', 'X']",
+   "evidence": [
+    {
+     "kind": "static-structural",
+     "ok": true,
+     "detail": "from lifted term"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "probed write set ['ITER', 'RNORM', 'W', 'X'], read set ['B', 'TOL', 'X']"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "892a53f5",
+   "subject": "CGSOLV",
+   "claim": "array footprints W[1..4*N], X[1..N], B[1..N]",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "loop-range analysis + z3"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "tagged-NaN canaries untouched"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "26c2642f",
+   "subject": "SETUP",
+   "claim": "semantics == lifted term (order-preserving, bitwise)",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "lifted by the static analyser (kernel mode)"
+    },
+    {
+     "kind": "dynamic-bitwise",
+     "ok": true,
+     "detail": "BITWISE-EQUIVALENT; 24 probes at sizes [[7, 5], [6, 8], [9, 12]]; V1 rel.err 0.0, V2 rel.err None"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "b76ded3d",
+   "subject": "SETUP",
+   "claim": "array footprints CK[1..NXI*NYI], DG[1..NXI*NYI]",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "loop-range analysis + z3"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "tagged-NaN canaries untouched"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "8776e92b",
+   "subject": "AMUL",
+   "claim": "linear stencil operator in X, offsets [[-1, 0], [0, -1], [0, 0], [0, 1], [1, 0]]",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "exact linear decomposition of the lifted term"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "{'X->Y': ['stencil2d', {'grid': [7, 5], 'offsets': [[-1, 0], [0, -1], [0, 0], [0, 1], [1, 0]], 'boundary': 'truncated (homogeneous Dirichlet)'}]}"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "ebab8191",
+   "subject": "AMUL",
+   "claim": "symmetric, IEEE-exact (c_s(p) == c_-s(p+s) modulo commutativity), all grid sizes",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "-(HX2I * 0.5 * (CK + CK[i+1,j])) <-> -(HX2I * 0.5 * (CK + CK[i-1,j])); -(HY2I * 0.5 * (CK + CK[i,j+1])) <-> -(HY2I * 0.5 * (CK + CK[i,j-1]))"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "exact Jacobian at sizes [[7, 5], [6, 8], [9, 12]]"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "cad1d48e",
+   "subject": "AMUL",
+   "claim": "SPD over R for every grid size, with coefficients from SETUP",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "{\"CK_range\": [0.5, 1.5], \"HX2I>0\": true, \"HY2I>0\": true, \"diag_positive\": true, \"dominant_everywhere\": true, \"strict_on_boundary\": true, \"offdiag_nonpositive\": true, \"SPD\": true}"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "Gershgorin on exact Jacobian (to roundoff)"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "9e2e484e",
+   "subject": "PCOND",
+   "claim": "Jacobi preconditioner of AMUL: z = r / diag(AMUL) with diag = DG",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "diagonal coefficient of the operator term is unconditional"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "Jacobian diagonal == field bitwise"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "f765a63f",
+   "subject": "CGSOLV",
+   "claim": "interface contract NX*NY == N",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "section Q of W is used with length NX*NY by AMUL.Y and length N elsewhere"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": true,
+     "detail": "holds at MAIN line 13 ({'N': 1200, 'MAXIT': 1000, 'NX': 40, 'NY': 30})"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "c8287169",
+   "subject": "DNRM2",
+   "claim": "interface contract INCX == 1",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "constant at all 3 call site(s) inside the library"
+    },
+    {
+     "kind": "dynamic-test",
+     "ok": null,
+     "detail": "library-internal call sites"
+    }
+   ],
+   "status": "PROVED (static only)"
+  },
+  {
+   "id": "7cf9510b",
+   "subject": "DAXPY",
+   "claim": "DY: separate IEEE semantics when DA == 0",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "kept as an explicit Where (not merged)"
+    }
+   ],
+   "status": "PROVED (static only)"
+  },
+  {
+   "id": "a3932f47",
+   "subject": "CGSOLV",
+   "claim": "W = R[1..N] ++ Z[N + 1..2*N] ++ P[2*N + 1..3*N] ++ Q[3*N + 1..4*N]  (disjoint, tiles [1..4*N])",
+   "evidence": [
+    {
+     "kind": "static-proof",
+     "ok": true,
+     "detail": "assuming section lengths >= 1"
+    },
+    {
+     "kind": "dynamic-bitwise",
+     "ok": true,
+     "detail": "driver replay compares W = concatenation bitwise"
+    }
+   ],
+   "status": "ESTABLISHED (static + dynamic)"
+  },
+  {
+   "id": "1bc2b2de",
+   "subject": "CGSOLV",
+   "claim": "implements preconditioned conjugate gradient (Hestenes-Stiefel, Saad Alg. 9.1) with A=AMUL, Minv=PCOND, dot=DDOT, nrm=DNRM2, axpy=DAXPY, copy=DCOPY, xpay=XPAY",
+   "evidence": [
+    {
+     "kind": "agent-claim",
+     "ok": null,
+     "detail": "Same PCG; the legacy code stores A x in the work-array section Q before forming r = b - q."
+    },
+    {
+     "kind": "static-structural",
+     "ok": true,
+     "detail": "alpha-equivalent (15 names matched)"
+    }
+   ],
+   "status": "PROVED (static only)"
+  },
+  {
+   "id": "54ff0ff7",
+   "subject": "AMUL",
+   "claim": "-div(k grad u) with homogeneous Dirichlet BC: Standard 5-point finite-difference/finite-volume discretisation of -d/dx(k du/dx) - d/dy(k du/dy) on the unit square, mesh h = 1/(N+1); face conductivities are arithmetic means k_{i+1/2,j} = (k_ij + k_{i+1,j})/2 (coefficient HX2I*0.5*(CK+CK[i+1,j]) = k_{i+1/2}/h^2); boundary faces use the cell value (ghost k = k_ij), u = 0 outside the grid.",
+   "evidence": [
+    {
+     "kind": "agent-claim",
+     "ok": null,
+     "detail": "Read off the coefficient table: off-diagonals -k_face/h^2, diagonal DG = sum of the four face coefficients incl. boundary faces (from SETUP)."
+    }
+   ],
+   "status": "CLAIMED (agent, unverified)"
+  },
+  {
+   "id": "d81c192d",
+   "subject": "SETUP",
+   "claim": "conductivity field and mesh factors: k(x,y) = 1 + 0.5 sin(2 pi x) cos(pi y) at x = i h_x, y = j h_y; HX2I = 1/h_x^2, HY2I = 1/h_y^2; DG = diagonal of the operator.",
+   "evidence": [
+    {
+     "kind": "agent-claim",
+     "ok": null,
+     "detail": "From the lifted SETUP term."
+    }
+   ],
+   "status": "CLAIMED (agent, unverified)"
+  },
+  {
+   "id": "57cc1813",
+   "subject": "DNRM2",
+   "claim": "line 202 has an unreachable branch",
+   "evidence": [
+    {
+     "kind": "agent-claim",
+     "ok": null,
+     "detail": "The DO loop is only reached in the ELSE branch, i.e. N >= 2 and INCX >= 1, so the upper bound 1+(N-1)*INCX >= 2 > 1 = lower bound: the zero-trip branch cannot be taken."
+    }
+   ],
+   "status": "CLAIMED (agent, unverified)"
+  }
+ ],
+ "worklist": [],
+ "justifications": [
+  {
+   "unit": "DNRM2",
+   "line": 202,
+   "argument": "The DO loop is only reached in the ELSE branch, i.e. N >= 2 and INCX >= 1, so the upper bound 1+(N-1)*INCX >= 2 > 1 = lower bound: the zero-trip branch cannot be taken."
+  }
+ ]
+}

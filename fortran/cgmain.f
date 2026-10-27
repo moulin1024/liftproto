@@ -1,0 +1,20 @@
+      PROGRAM PCGTST
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      PARAMETER (MAXN=4096)
+      DIMENSION B(MAXN),X(MAXN),W(4*MAXN)
+      NX = 40
+      NY = 30
+      N = NX*NY
+      CALL SETUP(NX,NY)
+      DO 10 K=1,N
+      B(K) = 1.0D0
+      X(K) = 0.0D0
+   10 CONTINUE
+      CALL CGSOLV(N,B,X,W,1.0D-10,1000,ITER,RNORM)
+      S = 0.0D0
+      DO 20 K=1,N
+      S = S + X(K)
+   20 CONTINUE
+      WRITE(*,100) ITER,RNORM,S
+  100 FORMAT(' PCG ITER=',I5,'  RNORM=',1PE12.5,'  SUM(X)=',1PE22.15)
+      END

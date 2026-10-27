@@ -1,0 +1,14 @@
+__pycache__/
+*.so
+*.o
+*.gcda
+*.gcno
+*.gcov
+out/
+ws_demo/build/
+ws_demo/cov/
+ws_*/build/
+ws_*/cov/
+bench/b
+bench/legacy_kernels.f
+fortran/pcgtst

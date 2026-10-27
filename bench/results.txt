@@ -1,0 +1,5 @@
+flags | ddot_unrolled ddot_plain daxpy_unrolled daxpy_plain [s] | bitwise_same_sum
+-O0 |    0.1337   0.2689   0.1816   0.1991  T
+-O2 |    0.0754   0.0776   0.0712   0.0742  T
+-O3 |    0.0750   0.0757   0.0713   0.0710  T
+-O3 -march=native |    0.0702   0.0721   0.0692   0.0699  T
